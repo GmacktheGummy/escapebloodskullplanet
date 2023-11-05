@@ -1,5 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://bgq12xnfs5gl0"]
-
-[ext_resource type="PackedScene" uid="uid://chc1h6xln7yuj" path="res://cavepassage.glb" id="1_2no0i"]
-
-[node name="cavepassage" instance=ExtResource("1_2no0i")]
