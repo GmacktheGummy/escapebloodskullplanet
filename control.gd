@@ -18,6 +18,7 @@ func _on_player_shoot_arrow():
 	var arrow_xrot= $Player/Camera3D.rotation.x
 	var arrow_zrot= $Player/Camera3D.rotation.z
 	var arrow_pos = Vector3($Player.position.x,$Player.position.y+1.4,$Player.position.z)
+	var arrow_str = $Player.bowpull_strength
 	var arrow = arrowscn.instantiate()
-	arrow.initialize(arrow_rot,arrow_pos,arrow_xrot,arrow_zrot)
+	arrow.initialize(arrow_rot,arrow_pos,arrow_xrot,arrow_zrot,arrow_str)
 	add_child(arrow)
