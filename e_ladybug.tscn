@@ -1,4 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://btbowfaol1dqi"]
+[gd_scene load_steps=5 format=3 uid="uid://btbowfaol1dqi"]
+
+[ext_resource type="Script" path="res://e_ladybug.gd" id="1_tbqc0"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w80b3"]
 albedo_color = Color(0.968627, 0, 0, 1)
@@ -11,6 +13,7 @@ size = Vector3(2.09969, 0.52847, 2.53288)
 [node name="e_ladybug" type="RigidBody3D"]
 collision_layer = 63
 collision_mask = 8
+script = ExtResource("1_tbqc0")
 
 [node name="body" type="MeshInstance3D" parent="."]
 transform = Transform3D(2.3828, 0, 0, 0, 0.925186, 0, 0, 0, 2.58826, 0, 0.455123, 0)

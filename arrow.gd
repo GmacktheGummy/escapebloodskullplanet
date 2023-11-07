@@ -19,14 +19,5 @@ func initialize(arrow_rot,arrow_pos,arrow_xrot,arrow_zrot,arrow_str):
 	
 func _physics_process(_delta):
 	velocity.y += (-gravity * _delta)/2
-	# Iterate through all collisions that occurred this frame
-	for index in range(get_slide_collision_count()):
-		# We get one of the collisions with the player
-		var collision = get_slide_collision(index)
-		# If the collision is with anything that isn't worth mentioning
-		if collision.get_collider().is_in_group("wall"):
-			velocity=Vector3.ZERO
 	move_and_collide(velocity * _delta)
 
-#func _on_visible_on_screen_notifier_3d_screen_exited():
-	#queue_free()

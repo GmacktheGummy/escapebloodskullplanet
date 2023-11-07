@@ -1,6 +1,8 @@
+res://e_ladybug.tscn
+res://e_ladybug.gd
 res://testscn.tscn
-res://arrow.gd
-res://player.gd
-res://control.gd
 res://player.tscn
-res://ladybug.tscn
+res://Bridge.gd
+res://bridgeswitch1.gd
+res://arrow.gd
+res://arrow.tscn

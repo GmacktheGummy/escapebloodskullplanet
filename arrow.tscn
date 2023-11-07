@@ -7,12 +7,11 @@
 size = Vector3(0.03, 0.03, 1.09)
 
 [node name="arrow" type="CharacterBody3D"]
-collision_layer = 27
+collision_layer = 19
 collision_mask = 16
 slide_on_ceiling = false
 script = ExtResource("1_5gmo6")
 min_speed = 30
-max_speed = 40
 
 [node name="collisionz" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0270599, 0)
