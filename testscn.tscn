@@ -1,11 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://dmow02mjao4kh"]
+[gd_scene load_steps=11 format=3 uid="uid://dmow02mjao4kh"]
 
 [ext_resource type="PackedScene" uid="uid://dwmskhvmjekey" path="res://player.tscn" id="1_10ces"]
 [ext_resource type="Script" path="res://control.gd" id="1_775os"]
 [ext_resource type="Texture2D" uid="uid://bshle5pufqonk" path="res://Assets/tx_wall_1.png" id="2_3gfm2"]
 [ext_resource type="Texture2D" uid="uid://rh4x1lfs6veb" path="res://Assets/tx_rockred.png" id="3_dld1w"]
-[ext_resource type="Script" path="res://Bridge.gd" id="5_fphqp"]
-[ext_resource type="Script" path="res://bridgeswitch1.gd" id="6_jy5mc"]
+[ext_resource type="PackedScene" uid="uid://c4dpcnypeb4x7" path="res://Prefabs/triggerable_bridge.tscn" id="5_s6yyd"]
+[ext_resource type="PackedScene" uid="uid://dbgmtnb228diu" path="res://Prefabs/basic_arrow_switch.tscn" id="7_8a3dt"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nyqxu"]
 albedo_texture = ExtResource("2_3gfm2")
@@ -21,32 +21,11 @@ size = Vector3(20, 1, 20)
 albedo_texture = ExtResource("3_dld1w")
 uv1_scale = Vector3(100, 100, 100)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_w242h"]
-size = Vector3(14.304, 1, 4.18491)
-
-[sub_resource type="BoxMesh" id="BoxMesh_sigfp"]
-size = Vector3(14.28, 1, 4.23)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yvm4g"]
-albedo_color = Color(0.34902, 0.490196, 0.878431, 1)
-metallic = 0.5
-metallic_specular = 0.66
-clearcoat_roughness = 0.32
-refraction_enabled = true
-refraction_scale = 0.21
-
-[sub_resource type="BoxMesh" id="BoxMesh_o4d7l"]
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_wpxt0"]
-radius = 31.2089
-
 [node name="testscn" type="Node3D"]
 script = ExtResource("1_775os")
 
 [node name="Player" parent="." groups=["current_level"] instance=ExtResource("1_10ces")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.533489, 0)
-collision_layer = 43
-collision_mask = 4
 
 [node name="wall" type="StaticBody3D" parent="."]
 transform = Transform3D(5.2655, 0, 0, 0, 33.1693, 0, 0, 0, 0.0132856, -34.3278, 4.23766, -10.4106)
@@ -54,7 +33,6 @@ collision_layer = 31
 collision_mask = 2
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="wall"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_nyqxu")
 mesh = SubResource("BoxMesh_7p6t5")
 
@@ -63,8 +41,7 @@ shape = SubResource("BoxShape3D_br3bh")
 
 [node name="wall2" type="StaticBody3D" parent="."]
 transform = Transform3D(-0.156299, 0, 0.073008, 0, 3.10302, 0, -0.100724, 0, -0.113291, -7.73043, 1.93943, 7.40731)
-collision_layer = 31
-collision_mask = 2
+collision_mask = 5
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="wall2"]
 material_override = SubResource("StandardMaterial3D_nyqxu")
@@ -123,7 +100,7 @@ shape = SubResource("BoxShape3D_br3bh")
 
 [node name="ground" type="StaticBody3D" parent="."]
 transform = Transform3D(4.4111, 0, 0, 0, 1, 0, 0, 0, 4.4111, -33.9967, 0, 33.8833)
-collision_layer = 31
+collision_mask = 5
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ground"]
 material_override = SubResource("StandardMaterial3D_ambw8")
@@ -135,7 +112,7 @@ shape = SubResource("BoxShape3D_br3bh")
 
 [node name="ground2" type="StaticBody3D" parent="."]
 transform = Transform3D(0.55168, 0, 0, 0, 3.70744, 0, 0, 0, 0.459255, 5.75275, 0.389057, 5.45203)
-collision_layer = 31
+collision_mask = 5
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ground2"]
 material_override = SubResource("StandardMaterial3D_ambw8")
@@ -147,10 +124,9 @@ shape = SubResource("BoxShape3D_br3bh")
 
 [node name="ground3" type="StaticBody3D" parent="."]
 transform = Transform3D(0.250735, 0, 0, 0, 2.1693, 0, 0, 0, 0.17753, 2.69372, 2.91056, 7.702)
-collision_layer = 31
+collision_mask = 5
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ground3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_ambw8")
 mesh = SubResource("BoxMesh_7p6t5")
 skeleton = NodePath("../..")
@@ -160,7 +136,7 @@ shape = SubResource("BoxShape3D_br3bh")
 
 [node name="ground4" type="StaticBody3D" parent="."]
 transform = Transform3D(0.334121, 0, 0, 0, 2.1693, 0, 0, 0, 0.311432, -7.35473, 4.49624, 7.58814)
-collision_layer = 31
+collision_mask = 5
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ground4"]
 material_override = SubResource("StandardMaterial3D_ambw8")
@@ -180,72 +156,15 @@ light_energy = 5.04
 omni_range = 26.837
 omni_attenuation = 0.5
 
-[node name="Bridge" type="Node3D" parent="."]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -23.3617, 6.24374, 7.03111)
-script = ExtResource("5_fphqp")
+[node name="Bridge" parent="." instance=ExtResource("5_s6yyd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.6975, 7.43436, 7.16966)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Bridge"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.35094, 0, 0)
-shape = SubResource("BoxShape3D_w242h")
+[node name="Switch" parent="." node_paths=PackedStringArray("objects_to_trigger") instance=ExtResource("7_8a3dt")]
+transform = Transform3D(0.995715, 0, -0.0924749, 0, 1, 0, 0.0924749, 0, 0.995715, -20.076, 16.6507, 1.96888)
+objects_to_trigger = [NodePath("../Bridge")]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Bridge"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.36105, 0, 0)
-mesh = SubResource("BoxMesh_sigfp")
-
-[node name="bridgeswitch1" type="StaticBody3D" parent="."]
-transform = Transform3D(0.995715, 0, -0.0924749, 0, 1, 0, 0.0924749, 0, 0.995715, -20.3211, 16.4266, 1.93266)
-collision_layer = 0
-collision_mask = 8
-script = ExtResource("6_jy5mc")
-
-[node name="switchmesh" type="MeshInstance3D" parent="bridgeswitch1"]
-transform = Transform3D(0.636112, 0.720311, 0.27661, -0.508302, 0.660906, -0.552116, -0.580509, 0.210606, 0.786546, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_yvm4g")
-transparency = 0.58
-mesh = SubResource("BoxMesh_o4d7l")
-skeleton = NodePath("")
-
-[node name="OmniLight3D2" type="OmniLight3D" parent="bridgeswitch1"]
-transform = Transform3D(0.995715, 0, 0.0924749, 0, 1, 0, -0.0924749, 0, 0.995715, 0.918291, -0.324104, -0.102225)
-light_color = Color(0.960784, 0.462745, 0.027451, 1)
-light_energy = 5.04
-omni_range = 26.837
-omni_attenuation = 0.5
-
-[node name="Area3D" type="Area3D" parent="bridgeswitch1"]
-
-[node name="areacollider" type="CollisionShape3D" parent="bridgeswitch1/Area3D"]
-transform = Transform3D(0.0286202, 0, 2.32831e-10, 0, 0.0286202, 0, -2.32831e-10, 0, 0.0286202, 0, 0, 0)
-shape = SubResource("SphereShape3D_wpxt0")
-
-[node name="bridgeswitch2" type="StaticBody3D" parent="."]
-transform = Transform3D(0.887164, 0, 0.461454, 0, 1, 0, -0.461454, 0, 0.887164, -17.8573, 16.4266, 13.4103)
-collision_layer = 0
-collision_mask = 8
-script = ExtResource("6_jy5mc")
-
-[node name="switchmesh" type="MeshInstance3D" parent="bridgeswitch2"]
-transform = Transform3D(0.636112, 0.720311, 0.27661, -0.508302, 0.660906, -0.552116, -0.580509, 0.210606, 0.786546, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_yvm4g")
-transparency = 0.58
-mesh = SubResource("BoxMesh_o4d7l")
-skeleton = NodePath("")
-
-[node name="OmniLight3D3" type="OmniLight3D" parent="bridgeswitch2"]
-transform = Transform3D(0.887164, 0, -0.461455, 0, 1, 0, 0.461455, 0, 0.887164, 1.07933, -0.370428, -0.718869)
-light_color = Color(0.960784, 0.462745, 0.027451, 1)
-light_energy = 5.04
-omni_range = 26.837
-omni_attenuation = 0.5
-
-[node name="Area3D" type="Area3D" parent="bridgeswitch2"]
-
-[node name="areacollider" type="CollisionShape3D" parent="bridgeswitch2/Area3D"]
-transform = Transform3D(0.0331689, 0, 1.86265e-09, 0, 0.0331689, 0, -1.86265e-09, 0, 0.0331689, 0, 0, 0)
-shape = SubResource("SphereShape3D_wpxt0")
+[node name="Switch2" parent="." node_paths=PackedStringArray("objects_to_trigger") instance=ExtResource("7_8a3dt")]
+transform = Transform3D(0.421258, 0, 0.906941, 0, 1, 0, -0.906941, 0, 0.421258, -20.076, 16.6507, 11.9689)
+objects_to_trigger = [NodePath("../Bridge")]
 
 [connection signal="shootArrow" from="Player" to="." method="_on_player_shoot_arrow"]
-[connection signal="switchActive" from="bridgeswitch1" to="Bridge" method="_on_bridgeswitch_1_switch_active"]
-[connection signal="body_entered" from="bridgeswitch1/Area3D" to="bridgeswitch1" method="_on_area_3d_body_entered"]
-[connection signal="switchActive" from="bridgeswitch2" to="Bridge" method="_on_bridgeswitch_1_switch_active"]
-[connection signal="body_entered" from="bridgeswitch2/Area3D" to="bridgeswitch2" method="_on_area_3d_body_entered"]

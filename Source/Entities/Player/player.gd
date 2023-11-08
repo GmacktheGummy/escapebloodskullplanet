@@ -2,7 +2,7 @@ extends CharacterBody3D
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 @export var speed = 6
-@export var jump_speed = 7
+@export var jump_speed = 14
 @export var mouse_sensitivity = 0.002
 @export var controller_sensitivity=0.002
 @export var canShoot = 1
@@ -19,11 +19,22 @@ var bowpos_strung_pos = Vector3(0.110, -0.063, -0.20)
 var bowpos_strung_zscale = 6
 var bowpull_strength = 1
 var arrow_zpos_origin = -0.02
-var isMoving=false
+
 signal shootArrow
+
+var is_grounded = false;
+var is_moving = false;
+var is_sprinting : bool = false;
+@export var max_sprint_speed : float = 12;
+var total_velocity_in_frame : Vector3 = Vector3.ZERO;
+var last_input : Vector2;
+var curr_input : Vector2;
+var ground_friction = 20;
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	last_input = Vector2.ZERO;
+	curr_input = Vector2.ZERO;
 
 func _input(event):
 	# Capture mouse when the Fire button is pressed
@@ -54,22 +65,40 @@ func _input(event):
 				shootingState=0
 				$Camera3D/bow/arrow.position.z = 0.2
 				shootArrow.emit()
+				
+	if event.is_action_pressed("sprint"):
+		#Can only initiate a sprint while grounded
+		if(is_grounded):
+			is_sprinting = true;
+			
+	if event.is_action_released("sprint"):
+		#If already sprinting while airborne, sprint is only deactivated upon becoming grounded
+		if(is_grounded):
+			is_sprinting = false;
 	
 func _physics_process(delta):
-	velocity.y += -gravity * delta
-	var input = Input.get_vector("left", "right", "forward", "back")
-	var movement_dir = transform.basis * Vector3(input.x, 0, input.y)
-	velocity.x = movement_dir.x * speed
-	velocity.z = movement_dir.z * speed
+	total_velocity_in_frame = Vector3.ZERO;
 	
-	if velocity != Vector3.ZERO:
-		isMoving=true
+	if(!is_grounded):
+		velocity.y += -gravity * delta
+		
+	last_input = curr_input;
+	curr_input = Vector2(Input.get_axis("left", "right"), Input.get_axis("forward", "back"));
+	
+	var movement_velocity = 0;
+	if(is_grounded):
+		movement_velocity = GroundedMovement();
 	else:
-		isMoving=false
+		movement_velocity = AirMovement();
+	total_velocity_in_frame += movement_velocity;
 	
-	move_and_slide()
-	if is_on_floor() and Input.is_action_just_pressed("jump"):
-		velocity.y = jump_speed
+	if (total_velocity_in_frame != Vector3.ZERO):
+		is_moving = true;
+	else:
+		is_moving = false;
+		
+	if is_grounded and Input.is_action_just_pressed("jump"):
+		total_velocity_in_frame.y = jump_speed
 	if current_equip==1:
 		#Animation of restringing a new arrow
 		if canShoot==0:
@@ -97,4 +126,51 @@ func _physics_process(delta):
 			$Camera3D/bow.position.z = bowpos_idle_pos.z
 			$Camera3D/bow.scale.z = bowpos_idle_zscale
 	
+	velocity += total_velocity_in_frame;
+	if(velocity.length() > 0):
+		var speed_drop = 0;
+		if(is_grounded):
+			var speed_bleed = 0;
+			if(velocity.length() < GetMaxSpeed()):
+				speed_bleed = GetMaxSpeed();
+			else:
+				speed_bleed = velocity.length();
+			speed_drop = ground_friction * speed_bleed * delta;
+			
+			var new_velocity_multiplier = velocity.length() - speed_drop;
+			new_velocity_multiplier /= velocity.length();
+			if(new_velocity_multiplier < 0):
+				new_velocity_multiplier = 0;
+				
+			velocity *= new_velocity_multiplier;
+		
+	move_and_slide()
+	if (is_on_floor()):
+		is_grounded = true;
+	else:
+		is_grounded = false;
+
+func GetMaxSpeed() -> float:
+	if (!is_sprinting):
+		return speed;
+	else:
+		return max_sprint_speed;
+
+func GroundedMovement() -> Vector3:
+	return basis * Vector3(curr_input.x, 0, curr_input.y) * GetMaxSpeed();
 	
+func AirMovement() -> Vector3:
+	var input_dir = (basis * Vector3(curr_input.x, 0, curr_input.y)).normalized();
+	var projected_vel = velocity.dot(input_dir);
+	var input_velocity = input_dir * GetMaxSpeed();
+	var add_speed = input_velocity.length() - projected_vel;
+	if(add_speed <= 0):
+		return Vector3.ZERO;
+		
+	var accel_speed = GetMaxSpeed() * input_velocity.length();
+	if(accel_speed > add_speed):
+		accel_speed = add_speed;
+		
+	return accel_speed * input_dir;
+	
+	return basis * Vector3(curr_input.x, 0, curr_input.y) * GetMaxSpeed();

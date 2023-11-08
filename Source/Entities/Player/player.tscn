@@ -1,23 +1,22 @@
 [gd_scene load_steps=8 format=3 uid="uid://dwmskhvmjekey"]
 
-[ext_resource type="Script" path="res://player.gd" id="1_x6dts"]
-[ext_resource type="PackedScene" uid="uid://cyeceenm5orbk" path="res://simplebow.glb" id="2_mc2h2"]
-[ext_resource type="PackedScene" uid="uid://cfhn4qgi1as0u" path="res://simplearrow.glb" id="3_nvwht"]
-[ext_resource type="Texture2D" uid="uid://dbq0ln4mxl2d7" path="res://crosshair.png" id="4_jnukf"]
+[ext_resource type="Script" path="res://Source/Entities/Player/player.gd" id="1_51y55"]
+[ext_resource type="Texture2D" uid="uid://dbq0ln4mxl2d7" path="res://crosshair.png" id="2_mt6p3"]
+[ext_resource type="PackedScene" uid="uid://cyeceenm5orbk" path="res://simplebow.glb" id="3_r2eog"]
+[ext_resource type="PackedScene" uid="uid://cfhn4qgi1as0u" path="res://simplearrow.glb" id="4_t68hq"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_45mvj"]
 radius = 0.4
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ill7"]
 transparency = 1
-albedo_texture = ExtResource("4_jnukf")
+albedo_texture = ExtResource("2_mt6p3")
 
 [sub_resource type="QuadMesh" id="QuadMesh_1mwbu"]
 
 [node name="Player" type="CharacterBody3D"]
-collision_layer = 47
-collision_mask = 16
-script = ExtResource("1_x6dts")
+collision_layer = 4
+script = ExtResource("1_51y55")
 speed = 5
 
 [node name="body_collision" type="CollisionShape3D" parent="."]
@@ -37,8 +36,8 @@ ignore_occlusion_culling = true
 gi_mode = 0
 mesh = SubResource("QuadMesh_1mwbu")
 
-[node name="bow" parent="Camera3D" instance=ExtResource("2_mc2h2")]
+[node name="bow" parent="Camera3D" instance=ExtResource("3_r2eog")]
 transform = Transform3D(0.226359, -4.79055, 0.0588773, 3.78949, 0.281388, -0.137026, 0.168853, 0.107003, 2.99629, 0.20525, -0.162547, -0.270434)
 
-[node name="arrow" parent="Camera3D/bow" instance=ExtResource("3_nvwht")]
+[node name="arrow" parent="Camera3D/bow" instance=ExtResource("4_t68hq")]
 transform = Transform3D(0.00263165, 0.694865, -0.719137, -0.058206, 0.718026, 0.693579, 0.998302, 0.0400327, 0.042335, -0.00868789, -0.00574698, -0.0195861)
