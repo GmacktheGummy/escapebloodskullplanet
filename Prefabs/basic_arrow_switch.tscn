@@ -1,0 +1,46 @@
+[gd_scene load_steps=6 format=3 uid="uid://dbgmtnb228diu"]
+
+[ext_resource type="Script" path="res://Source/Entities/ArrowSwitch/BasicArrowSwitchBehavior.gd" id="1_7y73j"]
+[ext_resource type="Script" path="res://Source/Entities/ArrowSwitch/ArrowSwitchHurtbox.gd" id="2_lb5t8"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tgr8j"]
+albedo_color = Color(0.34902, 0.490196, 0.878431, 1)
+metallic = 0.5
+metallic_specular = 0.66
+clearcoat_roughness = 0.32
+refraction_enabled = true
+refraction_scale = 0.21
+
+[sub_resource type="BoxMesh" id="BoxMesh_rrgg1"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_mjrjx"]
+radius = 31.2089
+
+[node name="Switch" type="Node3D"]
+transform = Transform3D(0.995715, 0, -0.0924749, 0, 1, 0, 0.0924749, 0, 0.995715, 0, 0, 0)
+script = ExtResource("1_7y73j")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.636112, 0.720311, 0.27661, -0.508302, 0.660906, -0.552116, -0.580509, 0.210606, 0.786546, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_tgr8j")
+transparency = 0.58
+mesh = SubResource("BoxMesh_rrgg1")
+skeleton = NodePath("")
+
+[node name="OmniLight" type="OmniLight3D" parent="."]
+transform = Transform3D(0.995715, 0, 0.0924749, 0, 1, 0, -0.0924749, 0, 0.995715, 0.918291, -0.324104, -0.102225)
+light_color = Color(0.960784, 0.462745, 0.027451, 1)
+light_energy = 5.04
+omni_range = 26.837
+omni_attenuation = 0.5
+
+[node name="Hurtbox" type="Area3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("2_lb5t8")
+
+[node name="Shape" type="CollisionShape3D" parent="Hurtbox"]
+transform = Transform3D(0.0286202, 0, 6.98492e-10, 0, 0.0286202, 0, -6.98492e-10, 0, 0.0286202, 0, 0, 0)
+shape = SubResource("SphereShape3D_mjrjx")
+
+[connection signal="switch_hit" from="Hurtbox" to="." method="_on_hurtbox_switch_hit"]

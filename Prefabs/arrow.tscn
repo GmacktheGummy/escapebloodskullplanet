@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://snboai7ann5i"]
+
+[ext_resource type="Script" path="res://Source/Entities/Arrow/ArrowBehavior.gd" id="1_bqsbe"]
+[ext_resource type="PackedScene" uid="uid://cfhn4qgi1as0u" path="res://simplearrow.glb" id="2_6vhe3"]
+[ext_resource type="Script" path="res://Source/Entities/Arrow/ArrowHitboxBehavior.gd" id="3_6ipyr"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_isgdo"]
+size = Vector3(0.03, 0.03, 1.09)
+
+[node name="Arrow" type="CharacterBody3D"]
+collision_layer = 0
+script = ExtResource("1_bqsbe")
+
+[node name="Mesh" parent="." instance=ExtResource("2_6vhe3")]
+transform = Transform3D(-2.62268e-07, 0, -6, 0, 6, 0, 6, 0, -2.62268e-07, 0, -0.0668566, 0.0283181)
+
+[node name="ColliderShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0270599, 0)
+shape = SubResource("BoxShape3D_isgdo")
+
+[node name="Hitbox" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("3_6ipyr")
+
+[node name="Collider" type="CollisionShape3D" parent="Hitbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0270599, 0)
+shape = SubResource("BoxShape3D_isgdo")

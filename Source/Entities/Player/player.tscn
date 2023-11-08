@@ -1,0 +1,43 @@
+[gd_scene load_steps=8 format=3 uid="uid://dwmskhvmjekey"]
+
+[ext_resource type="Script" path="res://Source/Entities/Player/player.gd" id="1_51y55"]
+[ext_resource type="Texture2D" uid="uid://dbq0ln4mxl2d7" path="res://crosshair.png" id="2_mt6p3"]
+[ext_resource type="PackedScene" uid="uid://cyeceenm5orbk" path="res://simplebow.glb" id="3_r2eog"]
+[ext_resource type="PackedScene" uid="uid://cfhn4qgi1as0u" path="res://simplearrow.glb" id="4_t68hq"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_45mvj"]
+radius = 0.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ill7"]
+transparency = 1
+albedo_texture = ExtResource("2_mt6p3")
+
+[sub_resource type="QuadMesh" id="QuadMesh_1mwbu"]
+
+[node name="Player" type="CharacterBody3D"]
+collision_layer = 4
+script = ExtResource("1_51y55")
+speed = 5
+
+[node name="body_collision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_45mvj")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05, 1.45, 0)
+doppler_tracking = 1
+fov = 65.0
+
+[node name="crosshair" type="MeshInstance3D" parent="Camera3D"]
+transform = Transform3D(0.0854427, 1.08412e-09, -3.72529e-09, 7.27596e-12, 0.0854427, 7.45058e-09, 0, 6.98492e-10, 1, -2.6077e-08, -2.38419e-07, -0.495862)
+material_override = SubResource("StandardMaterial3D_8ill7")
+cast_shadow = 0
+ignore_occlusion_culling = true
+gi_mode = 0
+mesh = SubResource("QuadMesh_1mwbu")
+
+[node name="bow" parent="Camera3D" instance=ExtResource("3_r2eog")]
+transform = Transform3D(0.226359, -4.79055, 0.0588773, 3.78949, 0.281388, -0.137026, 0.168853, 0.107003, 2.99629, 0.20525, -0.162547, -0.270434)
+
+[node name="arrow" parent="Camera3D/bow" instance=ExtResource("4_t68hq")]
+transform = Transform3D(0.00263165, 0.694865, -0.719137, -0.058206, 0.718026, 0.693579, 0.998302, 0.0400327, 0.042335, -0.00868789, -0.00574698, -0.0195861)

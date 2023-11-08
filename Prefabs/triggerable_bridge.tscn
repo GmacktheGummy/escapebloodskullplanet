@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://c4dpcnypeb4x7"]
+
+[ext_resource type="Script" path="res://Source/Entities/Bridge/BridgeBehavior.gd" id="1_13c15"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_sigfp"]
+size = Vector3(14.28, 1, 4.23)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_w242h"]
+size = Vector3(14.304, 1, 4.18491)
+
+[node name="Bridge" type="Node3D"]
+script = ExtResource("1_13c15")
+
+[node name="MeshContainer" type="Node3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="MeshContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.36105, 0, 0)
+mesh = SubResource("BoxMesh_sigfp")
+skeleton = NodePath("../..")
+
+[node name="Area3D" type="Area3D" parent="MeshContainer"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshContainer/Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.35094, 0, 0)
+shape = SubResource("BoxShape3D_w242h")

@@ -11,7 +11,7 @@ func _process(delta):
 	pass
 
 func _on_player_shoot_arrow():
-	var arrowscn = load("res://arrow.tscn")
+	var arrowscn = load("res://Prefabs/arrow.tscn")
 	# we need to store rotations like this so that the arrow mesh can visually rotate correctly, and
 	# so that the literal trajectory of the arrow's velocity is correct
 	var arrow_rot = Vector3($Player.rotation)
