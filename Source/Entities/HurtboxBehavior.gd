@@ -1,8 +1,8 @@
 class_name HurtboxBehavior
 extends AreaBoxBehavior
 
-@export var max_health = 1;
-@export var curr_health = 1;
+@export var max_health = 5;
+@export var curr_health = 5;
 
 var is_immune_damage = false;
 var is_immune_hits = false;
@@ -30,15 +30,19 @@ func on_get_hit(hitbox: HitboxBehavior, attack) -> bool:
 	print("Base hurtbox")
 	if(is_immune_hits):
 		return false;
-	if(attack["launch_direction"] == "same"):
-		pass;
-		print("On get hit");
-		if(owner.has_method("launch")):
-			print("On launch ", attack["launch_angle"], " - ", hitbox.owner.right.rotated(attack["launch_angle"]));
-			owner.launch(hitbox.owner.rotated(deg_to_rad(attack["launch_angle"])) * attack["launch_force"]);
-			
-	
+#	if(attack["launch_direction"] == "same"):
+#		pass;
+#		print("On get hit");
+#		if(owner.has_method("launch")):
+#			print("On launch ", attack["launch_angle"], " - ", hitbox.owner.right.rotated(attack["launch_angle"]));
+#			owner.launch(hitbox.owner.rotated(deg_to_rad(attack["launch_angle"])) * attack["launch_force"]);
+	hurt(1);
+	if (curr_health<=0):
+		queue_free();
+	else:
+		print("took damage!")
 	return true;
 
 func on_death():
-	pass;
+	print("deaded!");
+	get_parent_node_3d().queue_free();

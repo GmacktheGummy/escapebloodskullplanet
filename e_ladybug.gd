@@ -1,14 +1,9 @@
-extends RigidBody3D
+extends TriggerObject
 
-@export var totalhp = 5
-var hp
-var state
+var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+@export var speed = 3
+@onready var hurtbox : HurtboxBehavior = $Hurtbox;
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+func _on_hurtbox_switch_hit():
+	#Activate the actual Trigger object
+	on_trigger();

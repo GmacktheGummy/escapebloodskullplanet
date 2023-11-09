@@ -2,7 +2,7 @@ extends CharacterBody3D
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 @export var speed = 3
-@export var jump_speed = 14
+@export var jump_speed = 12
 @export var mouse_sensitivity = 0.002
 @export var controller_sensitivity=0.002
 @export var canShoot = 1
@@ -26,6 +26,7 @@ var is_grounded = false;
 var is_moving = false;
 var is_sprinting : bool = false;
 var max_sprint_speed = speed*2;
+var doublejump = 0;
 var total_velocity_in_frame : Vector3 = Vector3.ZERO;
 var last_input : Vector2;
 var curr_input : Vector2;
@@ -77,6 +78,8 @@ func _physics_process(delta):
 	
 	if(!is_grounded):
 		velocity.y += -gravity * delta
+	if(is_grounded):
+		doublejump=0;
 		
 	last_input = curr_input;
 	curr_input = Vector2(Input.get_axis("left", "right"), Input.get_axis("forward", "back"));
@@ -93,8 +96,14 @@ func _physics_process(delta):
 	else:
 		is_moving = false;
 		
-	if is_grounded and Input.is_action_just_pressed("jump"):
-		total_velocity_in_frame.y = jump_speed
+	if Input.is_action_just_pressed("jump") and doublejump!=2:
+		if (doublejump==0):
+			total_velocity_in_frame.y = jump_speed;
+		else:
+			velocity.y = 0;
+			total_velocity_in_frame.y = jump_speed/2;
+		doublejump+=1;
+	
 	if current_equip==1:
 		#Animation of restringing a new arrow
 		if canShoot==0:
