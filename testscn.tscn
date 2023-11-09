@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://dmow02mjao4kh"]
 
-[ext_resource type="PackedScene" uid="uid://dwmskhvmjekey" path="res://player.tscn" id="1_10ces"]
+[ext_resource type="PackedScene" uid="uid://dwmskhvmjekey" path="res://Source/Entities/Player/player.tscn" id="1_10ces"]
 [ext_resource type="Script" path="res://control.gd" id="1_775os"]
 [ext_resource type="Texture2D" uid="uid://bshle5pufqonk" path="res://Assets/tx_wall_1.png" id="2_3gfm2"]
 [ext_resource type="Texture2D" uid="uid://rh4x1lfs6veb" path="res://Assets/tx_rockred.png" id="3_dld1w"]
@@ -103,6 +103,7 @@ transform = Transform3D(4.4111, 0, 0, 0, 1, 0, 0, 0, 4.4111, -33.9967, 0, 33.883
 collision_mask = 5
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00358295, 1.90735e-06, -0.00869179)
 material_override = SubResource("StandardMaterial3D_ambw8")
 mesh = SubResource("BoxMesh_7p6t5")
 skeleton = NodePath("../..")
@@ -157,7 +158,7 @@ omni_range = 26.837
 omni_attenuation = 0.5
 
 [node name="Bridge" parent="." instance=ExtResource("5_s6yyd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.6975, 7.43436, 7.16966)
+transform = Transform3D(0.969944, 0, -0.243327, 0, 1, 0, 0.243327, 0, 0.969944, -21.9402, 7.90296, 6.29289)
 
 [node name="Switch" parent="." node_paths=PackedStringArray("objects_to_trigger") instance=ExtResource("7_8a3dt")]
 transform = Transform3D(0.995715, 0, -0.0924749, 0, 1, 0, 0.0924749, 0, 0.995715, -20.076, 16.6507, 1.96888)

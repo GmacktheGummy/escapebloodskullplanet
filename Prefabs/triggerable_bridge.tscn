@@ -15,12 +15,13 @@ script = ExtResource("1_13c15")
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="Mesh" type="MeshInstance3D" parent="MeshContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.36105, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
 mesh = SubResource("BoxMesh_sigfp")
 skeleton = NodePath("../..")
 
-[node name="Area3D" type="Area3D" parent="MeshContainer"]
+[node name="Area3D" type="StaticBody3D" parent="MeshContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 0)
+collision_mask = 5
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshContainer/Area3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.35094, 0, 0)
 shape = SubResource("BoxShape3D_w242h")

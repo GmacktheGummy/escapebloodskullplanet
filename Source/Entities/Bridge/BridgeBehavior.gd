@@ -15,8 +15,8 @@ func on_trigger_deactivation(trigger):
 		
 func on_activate() -> void:
 	if mesh_container.rotation.z > 0:
-		mesh_container.rotation.z -= 1
+		mesh_container.rotation.z = 0
 	
 func on_deactivate() -> void:
-	if mesh_container.rotation.z != 90:
-		mesh_container.rotation.z = 90
+	if mesh_container.rotat.z != deg_to_rad(90):
+		mesh_container.rotation.z = deg_to_rad(90)
