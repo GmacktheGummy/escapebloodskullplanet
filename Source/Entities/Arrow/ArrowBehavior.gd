@@ -3,7 +3,7 @@ extends CharacterBody3D
 @onready var collider = $ColliderShape;
 
 # Minimum speed of the mob in meters per second.
-@export var min_speed = 10
+@export var min_speed = 5
 # Maximum speed of the mob in meters per second.
 @export var max_speed = 40
 
@@ -18,7 +18,7 @@ func initialize(arrow_rot,arrow_pos,arrow_xrot,arrow_zrot,arrow_str):
 	rotate_y(arrow_rot.y)
 	rotate_z(arrow_rot.z)
 	# We calculate the strength of the shot
-	var random_speed = ((max_speed-min_speed)*(arrow_str*5))
+	var random_speed = ((max_speed-min_speed)*(arrow_str*2))
 	# We calculate a forward velocity that represents the speed.
 	velocity = Vector3.FORWARD.rotated(Vector3(1,0,0),arrow_xrot).rotated(Vector3.UP,arrow_rot.y).rotated(Vector3(0,0,1),arrow_zrot) * random_speed
 	

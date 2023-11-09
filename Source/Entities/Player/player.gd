@@ -1,7 +1,7 @@
 extends CharacterBody3D
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
-@export var speed = 6
+@export var speed = 3
 @export var jump_speed = 14
 @export var mouse_sensitivity = 0.002
 @export var controller_sensitivity=0.002
@@ -25,7 +25,7 @@ signal shootArrow
 var is_grounded = false;
 var is_moving = false;
 var is_sprinting : bool = false;
-@export var max_sprint_speed : float = 12;
+var max_sprint_speed = speed*2;
 var total_velocity_in_frame : Vector3 = Vector3.ZERO;
 var last_input : Vector2;
 var curr_input : Vector2;
@@ -65,16 +65,12 @@ func _input(event):
 				shootingState=0
 				$Camera3D/bow/arrow.position.z = 0.2
 				shootArrow.emit()
-				
-	if event.is_action_pressed("sprint"):
-		#Can only initiate a sprint while grounded
-		if(is_grounded):
-			is_sprinting = true;
-			
-	if event.is_action_released("sprint"):
-		#If already sprinting while airborne, sprint is only deactivated upon becoming grounded
-		if(is_grounded):
-			is_sprinting = false;
+	#Can only start/stop a sprint while grounded and not airborne
+	if (event.is_action_pressed("sprint")):
+		is_sprinting = true;
+	if !(event.is_action_released("sprint")):
+		is_sprinting = false;
+
 	
 func _physics_process(delta):
 	total_velocity_in_frame = Vector3.ZERO;
