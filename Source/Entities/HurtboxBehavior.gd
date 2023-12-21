@@ -38,7 +38,7 @@ func on_get_hit(hitbox: HitboxBehavior, attack) -> bool:
 #			owner.launch(hitbox.owner.rotated(deg_to_rad(attack["launch_angle"])) * attack["launch_force"]);
 	hurt(1);
 	if (curr_health<=0):
-		queue_free();
+		on_death();
 	else:
 		print("took damage!")
 	return true;
