@@ -27,6 +27,8 @@ script = ExtResource("1_775os")
 
 [node name="Player" parent="." groups=["current_level"] instance=ExtResource("1_10ces")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.81182, 6.12145, 8.01389)
+speed = 2
+jump_speed = 10
 
 [node name="wall" type="StaticBody3D" parent="."]
 transform = Transform3D(5.2655, 0, 0, 0, 33.1693, 0, 0, 0, 0.0132856, -34.3278, 4.23766, -10.4106)

@@ -1,6 +1,6 @@
 extends CharacterBody3D
 
-var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+@export var gravity_multiplier = 3.0
 @export var speed = 3
 @export var jump_speed = 12
 @export var mouse_sensitivity = 0.002
@@ -25,12 +25,15 @@ signal shootArrow
 var is_grounded = false;
 var is_moving = false;
 var is_sprinting : bool = false;
-var max_sprint_speed = speed*2;
+var can_double_jump = true;
+var has_double_jumped = false;
+var max_sprint_speed = speed*1.5;
 var doublejump = 0;
 var total_velocity_in_frame : Vector3 = Vector3.ZERO;
 var last_input : Vector2;
 var curr_input : Vector2;
 var ground_friction = 20;
+var gravity = ProjectSettings.get_setting("physics/3d/default_gravity") * gravity_multiplier;
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -66,23 +69,23 @@ func _input(event):
 				shootingState=0
 				$Camera3D/bow/arrow.position.z = 0.2
 				shootArrow.emit()
-	#Can only start/stop a sprint while grounded and not airborne
-	if (event.is_action_pressed("sprint")):
-		is_sprinting = true;
-	if !(event.is_action_released("sprint")):
-		is_sprinting = false;
 
 	
 func _physics_process(delta):
 	total_velocity_in_frame = Vector3.ZERO;
 	
-	if(!is_grounded):
-		velocity.y += -gravity * delta
-	if(is_grounded):
-		doublejump=0;
+	#Can only start/stop a sprint while grounded and not airborne
+	if (Input.is_action_pressed("sprint")):
+		is_sprinting = true;
+	if (!Input.is_action_pressed("sprint")):
+		is_sprinting = false;
 		
+	ApplyGravity();
+
 	last_input = curr_input;
 	curr_input = Vector2(Input.get_axis("left", "right"), Input.get_axis("forward", "back"));
+	
+	ApplyFriction();
 	
 	var movement_velocity = 0;
 	if(is_grounded):
@@ -96,13 +99,8 @@ func _physics_process(delta):
 	else:
 		is_moving = false;
 		
-	if Input.is_action_just_pressed("jump") and doublejump!=2:
-		if (doublejump==0):
-			total_velocity_in_frame.y = jump_speed;
-		else:
-			velocity.y = 0;
-			total_velocity_in_frame.y = jump_speed/2;
-		doublejump+=1;
+	if (Input.is_action_just_pressed("jump")):
+		OnJump();
 	
 	if current_equip==1:
 		#Animation of restringing a new arrow
@@ -132,50 +130,100 @@ func _physics_process(delta):
 			$Camera3D/bow.scale.z = bowpos_idle_zscale
 	
 	velocity += total_velocity_in_frame;
-	if(velocity.length() > 0):
-		var speed_drop = 0;
-		if(is_grounded):
-			var speed_bleed = 0;
-			if(velocity.length() < GetMaxSpeed()):
-				speed_bleed = GetMaxSpeed();
-			else:
-				speed_bleed = velocity.length();
-			speed_drop = ground_friction * speed_bleed * delta;
-			
-			var new_velocity_multiplier = velocity.length() - speed_drop;
-			new_velocity_multiplier /= velocity.length();
-			if(new_velocity_multiplier < 0):
-				new_velocity_multiplier = 0;
-				
-			velocity *= new_velocity_multiplier;
-		
-	move_and_slide()
-	if (is_on_floor()):
-		is_grounded = true;
-	else:
-		is_grounded = false;
+	
+	move_and_slide();
+	if (is_on_floor() && !is_grounded):
+		OnBecomeGrounded();
+	elif (!is_on_floor() && is_grounded):
+		OnBecomeAirborne();
+
+func OnJump():
+	if(is_grounded):
+		velocity.y = jump_speed;
+		#total_velocity_in_frame.y = jump_speed;
+	elif (!has_double_jumped && can_double_jump):
+		velocity.y = jump_speed/2;
+		#total_velocity_in_frame.y = jump_speed/2;
+		can_double_jump = false;
+		has_double_jumped = true;
 
 func GetMaxSpeed() -> float:
 	if (!is_sprinting):
 		return speed;
 	else:
+		print("SPEED");
 		return max_sprint_speed;
 
-func GroundedMovement() -> Vector3:
-	return basis * Vector3(curr_input.x, 0, curr_input.y) * GetMaxSpeed();
+func ApplyFriction():
+	if(!is_grounded):
+		return;
 	
+	if(velocity.length() > 0):
+		var speed_drop = 0;
+		var speed_bleed = 0;
+		if(velocity.length() < GetMaxSpeed()):
+			speed_bleed = GetMaxSpeed();
+		else:
+			speed_bleed = velocity.length();
+		speed_drop = ground_friction * speed_bleed * get_physics_process_delta_time();
+		
+		var new_velocity_multiplier = velocity.length() - speed_drop;
+		new_velocity_multiplier /= velocity.length();
+		if(new_velocity_multiplier < 0):
+			new_velocity_multiplier = 0;
+			
+		velocity *= new_velocity_multiplier;
+
+func ApplyGravity():
+	if(!is_grounded):
+		velocity.y -= gravity * get_physics_process_delta_time();
+
+func OnBecomeGrounded():
+	has_double_jumped = false;
+	can_double_jump = true;
+	is_grounded = true;
+
+func OnBecomeAirborne():
+	is_grounded = false;
+
+func GroundedMovement() -> Vector3:
+	var fwd = basis.z;
+	var right = basis.x;
+	var input_accel = (curr_input.y * fwd + curr_input.x * right).normalized();
+	input_accel *= GetMaxSpeed();
+	
+	var y_plane_vel = velocity;
+	y_plane_vel.y = 0;
+	
+	var velocity_proj = velocity.length() * cos(input_accel.angle_to(y_plane_vel));
+	var result = y_plane_vel + input_accel;
+	
+	if(result.length() <= GetMaxSpeed()):
+		return input_accel;
+	elif(result.length() > GetMaxSpeed()):
+		var remainder = result.length() - GetMaxSpeed();
+		if((result.length() - remainder) <= GetMaxSpeed()):
+			return input_accel.normalized() * (result.length() - remainder);
+	
+	return Vector3.ZERO;
+
 func AirMovement() -> Vector3:
-	var input_dir = (basis * Vector3(curr_input.x, 0, curr_input.y)).normalized();
-	var projected_vel = velocity.dot(input_dir);
-	var input_velocity = input_dir * GetMaxSpeed();
-	var add_speed = input_velocity.length() - projected_vel;
+	var fwd = basis.z;
+	var right = basis.x;
+	var input_accel = (curr_input.y * fwd + curr_input.x * right).normalized();
+	
+	#Project the new input acceleration onto the current velocity
+	input_accel *= GetMaxSpeed();
+	var projected_vel = velocity.dot(input_accel);
+	
+	#Speed difference with the new input
+	var add_speed = input_accel.length() - projected_vel;
+	#If there is no speed being added
 	if(add_speed <= 0):
 		return Vector3.ZERO;
 		
-	var accel_speed = GetMaxSpeed() * input_velocity.length();
+	var accel_speed = GetMaxSpeed() * input_accel.length() * get_physics_process_delta_time();
 	if(accel_speed > add_speed):
 		accel_speed = add_speed;
 		
-	return accel_speed * input_dir;
-	
-	return basis * Vector3(curr_input.x, 0, curr_input.y) * GetMaxSpeed();
+	return accel_speed * input_accel;
